@@ -1,12 +1,9 @@
-
+import { Button } from '@/components/ui/button'
 
 export function App() {
- 
   return (
-    <>
-      <h3>hello</h3>
-    </>
+    <div>
+      <Button>Save</Button>
+    </div>
   )
 }
-
-
