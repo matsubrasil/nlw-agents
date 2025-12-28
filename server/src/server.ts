@@ -9,6 +9,7 @@ import {
   type ZodTypeProvider,
 } from 'fastify-type-provider-zod'
 import { env } from '@/env'
+import { createRoom } from '@/http/routes/create-room'
 import { listRooms } from '@/http/routes/list-rooms'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
@@ -38,6 +39,7 @@ app.register(ScalarApiReference, {
 })
 
 app.register(listRooms)
+app.register(createRoom)
 
 app.get('/health', () => {
   return 'Ok'
