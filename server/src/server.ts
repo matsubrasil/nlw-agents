@@ -11,6 +11,7 @@ import {
 import { env } from '@/env'
 import { createRoom } from '@/http/routes/create-room'
 import { listRooms } from '@/http/routes/list-rooms'
+import { getRoomQuestions } from './http/routes/get-room-questions'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -40,6 +41,7 @@ app.register(ScalarApiReference, {
 
 app.register(listRooms)
 app.register(createRoom)
+app.register(getRoomQuestions)
 
 app.get('/health', () => {
   return 'Ok'

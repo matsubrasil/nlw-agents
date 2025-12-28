@@ -8,7 +8,6 @@ async function main() {
   await db.delete(schema.questions)
   await db.delete(schema.rooms)
 
-
   // 2. Gerar salas de forma declarativa
   const roomData = Array.from({ length: 20 }, () => ({
     name: f.company.name(),
@@ -21,8 +20,6 @@ async function main() {
     .values(roomData)
     .returning({ id: schema.rooms.id })
 
- 
-
   // 3. Gerar perguntas mapeando as salas inseridas
   const questionRecords = insertedRooms.flatMap((room) =>
     Array.from({ length: 5 }, () => ({
@@ -30,7 +27,7 @@ async function main() {
       question: f.lorem.sentence(),
       answer: f.lorem.sentence(),
       createdAt: f.date.recent({ days: 30 }),
-    }))
+    })),
   )
 
   if (questionRecords.length > 0) {
