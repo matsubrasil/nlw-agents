@@ -8,59 +8,35 @@ async function main() {
   await db.delete(schema.questions)
   await db.delete(schema.rooms)
 
-  // Criar salas
-  const roomRecords = []
-  for (let i = 0; i < 20; i++) {
-    const room = {
-      name: f.company.name(),
-      description: f.lorem.paragraph(),
-      createdAt: f.date.recent({ days: 365 }), // retorna Date
-    }
-    roomRecords.push(room)
-  }
+
+  // 2. Gerar salas de forma declarativa
+  const roomData = Array.from({ length: 20 }, () => ({
+    name: f.company.name(),
+    description: f.lorem.paragraph(),
+    createdAt: f.date.recent({ days: 365 }),
+  }))
 
   const insertedRooms = await db
     .insert(schema.rooms)
-    .values(roomRecords)
+    .values(roomData)
     .returning({ id: schema.rooms.id })
 
-  // Criar perguntas para cada sala
-  const questionRecords = []
+ 
 
-  for (const room of insertedRooms) {
-    for (let q = 0; q < 5; q++) {
-      questionRecords.push({
-        roomId: room.id,
-        question: f.lorem.sentence(),
-        answer: f.lorem.sentence(),
-        createdAt: f.date.recent({
-          days: 30,
-        }),
-      })
-    }
+  // 3. Gerar perguntas mapeando as salas inseridas
+  const questionRecords = insertedRooms.flatMap((room) =>
+    Array.from({ length: 5 }, () => ({
+      roomId: room.id,
+      question: f.lorem.sentence(),
+      answer: f.lorem.sentence(),
+      createdAt: f.date.recent({ days: 30 }),
+    }))
+  )
+
+  if (questionRecords.length > 0) {
+    await db.insert(schema.questions).values(questionRecords)
   }
 
-  await db.insert(schema.questions).values(questionRecords)
-
-  /*
-  await reset(db, schema)
-
-  await seed(db, schema).refine((f) => {
-    return {
-      rooms: {
-        count: 20,
-        with: {
-          questions: 5,
-        },
-        columns: {
-          name: f.companyName(),
-          description: f.loremIpsum(),
-          createdAt: f.date.recent({ days: 365 }).getTime(),
-        },
-      },
-    }
-  })
-*/
   console.log('Database seed finished')
 }
 
