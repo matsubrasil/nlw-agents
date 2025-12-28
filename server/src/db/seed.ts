@@ -21,8 +21,6 @@ async function main() {
     .values(roomData)
     .returning({ id: schema.rooms.id })
 
- 
-
   // 3. Gerar perguntas mapeando as salas inseridas
   const questionRecords = insertedRooms.flatMap((room) =>
     Array.from({ length: 5 }, () => ({
