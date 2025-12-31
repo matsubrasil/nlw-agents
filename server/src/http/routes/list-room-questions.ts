@@ -4,7 +4,7 @@ import { z } from 'zod/v4'
 import { db } from '@/db/connection'
 import { schema } from '@/db/schema'
 
-export const getRoomQuestions: FastifyPluginAsyncZod = async (app) => {
+export const listRoomQuestions: FastifyPluginAsyncZod = async (app) => {
   app.get(
     '/rooms/:roomId/questions',
     {
@@ -20,12 +20,13 @@ export const getRoomQuestions: FastifyPluginAsyncZod = async (app) => {
         response: {
           200: z.object({
             questions: z.array(
-                z.object({
-                    id: z.string(),
-                    question: z.string(),
-                    answer: z.string().nullable(),
-                })
-            )
+              z.object({
+                id: z.string(),
+                question: z.string(),
+                answer: z.string().nullable(),
+                createdAt: z.coerce.date(),
+              }),
+            ),
           }),
           404: z.object({
             message: z.string(),
@@ -38,8 +39,11 @@ export const getRoomQuestions: FastifyPluginAsyncZod = async (app) => {
       console.log(roomId)
 
       // 1. Primeiro verifica se a sala existe
-      const roomExists = await db.select().from(schema.rooms).where(eq(schema.rooms.id, roomId))
-      
+      const roomExists = await db
+        .select()
+        .from(schema.rooms)
+        .where(eq(schema.rooms.id, roomId))
+
       if (!roomExists) {
         return reply.status(404).send({ message: 'Room not found' })
       }
@@ -49,13 +53,14 @@ export const getRoomQuestions: FastifyPluginAsyncZod = async (app) => {
           id: schema.questions.id,
           question: schema.questions.question,
           answer: schema.questions.answer,
+          createdAt: schema.questions.createdAt,
         })
         .from(schema.questions)
         .where(eq(schema.questions.roomId, roomId))
         .orderBy(desc(schema.questions.createdAt))
 
       // 2. Se a sala existe, apenas retorna o que houver (mesmo que seja [])
-      return reply.status(200).send({questions: results})
+      return reply.status(200).send({ questions: results })
     },
   )
 }

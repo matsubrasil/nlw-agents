@@ -1,10 +1,10 @@
 import { createFileRoute, Navigate } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/room/$id')({
-  component: RouteComponent,
+  component: RoomDetailComponent,
 })
 
-function RouteComponent() {
+function RoomDetailComponent() {
   const { id } = Route.useParams()
 
   if (!id) {
