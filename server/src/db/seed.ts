@@ -9,7 +9,7 @@ async function main() {
   await db.delete(schema.rooms)
 
   // 2. Gerar salas de forma declarativa
-  const roomData = Array.from({ length: 20 }, () => ({
+  const roomData = Array.from({ length: 5 }, () => ({
     name: f.company.name(),
     description: f.lorem.paragraph(),
     createdAt: f.date.recent({ days: 365 }),
