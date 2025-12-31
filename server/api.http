@@ -25,7 +25,7 @@ content-type: application/json
 
 {
     "name": "sala 1",
-    "description": "Sala de aula 1"
+    "description": "Sala de aula 2"
 }
 
 ###
@@ -44,3 +44,15 @@ GET {{baseURL}}/rooms/{{roomId}}/questions
 # Get room questions
 # @name GetRoomQuestions
 GET {{baseURL}}/rooms/{{roomId2}}/questions
+
+
+###
+
+# Post create a new room question
+# @name createQuestion
+POST {{baseURL}}/rooms/{{roomId}}/questions
+content-type: application/json
+
+{
+    "question": "Qual é o peço da galinha"
+}
