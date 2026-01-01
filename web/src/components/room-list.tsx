@@ -31,8 +31,8 @@ export function ListRoom() {
         {data?.map((room) => {
           return (
             <Link
-              to="/room/$id"
-              params={{ id: room.id }}
+              to="/room/$roomId"
+              params={{ roomId: room.id }}
               key={room.id}
               className="flex items-center justify-between rounded-lg border p-3 hover:bg-accent/50"
             >

@@ -29,7 +29,7 @@ const createRoomSchema = z.object({
 type CreateRoomFormData = z.infer<typeof createRoomSchema>
 
 export function CreateRoomForm() {
-  const { mutateAsync: createRoom } = useCreateRoom()
+  const { mutateAsync: createRoomMutation, isPending } = useCreateRoom()
 
   const createRoomForm = useForm<CreateRoomFormData>({
     resolver: zodResolver(createRoomSchema),
@@ -41,7 +41,7 @@ export function CreateRoomForm() {
 
   async function handleCreateRoom({ name, description }: CreateRoomFormData) {
     //console.log(data)
-    await createRoom({ name, description })
+    await createRoomMutation({ name, description })
     createRoomForm.reset()
   }
 
@@ -95,8 +95,8 @@ export function CreateRoomForm() {
               }}
             />
 
-            <Button type="submit" className="w-full">
-              Criar sala
+            <Button type="submit" className="w-full" disabled={isPending}>
+              {isPending ? 'Salvando...' : 'Criar sala'}
             </Button>
           </form>
         </Form>
